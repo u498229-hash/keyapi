@@ -139,7 +139,7 @@ function make_username(array $store): string {
     $known = [];
     foreach ($store['accounts'] as $account) $known[(string)($account['username'] ?? '')] = true;
     for ($i = 0; $i < 1000; $i++) {
-        $candidate = 'VANTHOR' . (string)random_int(1000000, 9999999);
+        $candidate = 'ALONE' . (string)random_int(1000000, 9999999);
         if (!isset($known[$candidate])) return $candidate;
     }
     throw new RuntimeException('Could not allocate a unique username.');
@@ -147,8 +147,8 @@ function make_username(array $store): string {
 
 function make_password(): string {
     $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
-    $out = '';
-    for ($i = 0; $i < 20; $i++) $out .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+    $out = 'ALONE';
+    for ($i = 0; $i < 15; $i++) $out .= $alphabet[random_int(0, strlen($alphabet) - 1)];
     return $out;
 }
 
@@ -479,7 +479,7 @@ if ($method === 'POST' && $path === '/connect') {
     $username = trim((string)($input['username'] ?? ''));
     $password = trim((string)($input['password'] ?? ''));
     $serial = trim((string)($input['serial'] ?? ''));
-    if ($game !== $APP_GAME_ID || !preg_match('/^VANTHOR[0-9]{7}$/', $username) || strlen($password) !== 20 || $serial === '' || strlen($serial) > 256) {
+    if ($game !== $APP_GAME_ID || !preg_match('/^(?:ALONE|VANTHOR)[0-9]{7}$/', $username) || strlen($password) !== 20 || $serial === '' || strlen($serial) > 256) {
         reply(200, ['status' => false, 'reason' => 'Invalid login details or app configuration.']);
     }
     $ip = (string)($_SERVER['REMOTE_ADDR'] ?? 'unknown');
